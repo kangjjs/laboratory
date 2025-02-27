@@ -1,9 +1,14 @@
-HELP.md
+### Gradle 관련 ###
 .gradle
 build/
+!gradle/wrapper/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+!gradle/wrapper/gradle-wrapper.properties
+!gradle/wrapper/gradle-wrapper.zip
+!gradlew
+!gradlew.bat
+!settings.gradle
+!build.gradle
 
 ### STS ###
 .apt_generated
@@ -41,23 +46,12 @@ out/
 **/target/**
 **/src/main/generated/**
 
+### 환경 설정 파일 제외 ###
 **/src/main/resources/application.yml
-**/src/main/resources/data.sqlbuild/
-out/
-target/
-gradle/
+**/src/main/resources/data.sql
+
+### 기타 ###
 *.log
 *.class
 .DS_Store
-application.yml
-data.sql
-build/
-out/
-target/
-gradle/
-*.log
-*.class
-.DS_Store
-application.yml
-data.sql
 *.iml
