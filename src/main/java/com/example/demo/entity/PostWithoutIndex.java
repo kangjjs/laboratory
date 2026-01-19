@@ -1,17 +1,8 @@
 package com.example.demo.entity;
 
 import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,13 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(
-	name = "post",
-	indexes = {
-		@Index(name = "idx_post_title", columnList = "title")
-	}
-)
-public class Post {
+@Table(name = "post_without_index")
+public class PostWithoutIndex {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -45,4 +31,3 @@ public class Post {
 	@JoinColumn(name = "user_id")
 	private User user;
 }
-

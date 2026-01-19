@@ -2,6 +2,8 @@ package com.example.demo.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -14,6 +16,7 @@ import org.springframework.util.StopWatch;
 
 import com.example.demo.config.TestQueryDslConfig;
 import com.example.demo.entity.Post;
+import com.example.demo.entity.PostWithoutIndex;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -22,6 +25,9 @@ class PostRepositoryTest {
 
 	@Autowired
 	private PostRepository postRepository;
+
+	@Autowired
+	private PostWithoutIndexRepository postWithoutIndexRepository;
 
 	// 첫 번째 페이지에서 데이터 개수가 pageSize(20)보다 적을 때
 	@Test
@@ -121,5 +127,27 @@ class PostRepositoryTest {
 		System.out.println("🚀 (마지막 페이지, 100개 데이터) PageableExecutionUtils 실행 시간: " + stopWatch2.getTotalTimeMillis() + "ms");
 
 		assertEquals(page1.getTotalElements(), page2.getTotalElements());
+	}
+
+	@Test
+	public void testIndexVsNoIndexSearch() {
+		String SEARCH_TITLE = "Test Post 50000";
+
+		StopWatch stopWatch1 = new StopWatch();
+		stopWatch1.start();
+		List<Post> withIndex = postRepository.findByTitle(SEARCH_TITLE);
+		stopWatch1.stop();
+		long timeWithIndex = stopWatch1.getTotalTimeMillis();
+
+		StopWatch stopWatch2 = new StopWatch();
+		stopWatch2.start();
+		List<PostWithoutIndex> withoutIndex = postWithoutIndexRepository.findByTitle(SEARCH_TITLE);
+		stopWatch2.stop();
+		long timeWithoutIndex = stopWatch2.getTotalTimeMillis();
+
+		// ✅ 결과 출력 (System.out.println 사용)
+		System.out.println("🚀 검색 성능 비교 (title = '" + SEARCH_TITLE + "')");
+		System.out.println("🟢 인덱스 적용 후 실행 시간: " + timeWithIndex + "ms");
+		System.out.println("🔴 인덱스 없이 실행 시간: " + timeWithoutIndex + "ms");
 	}
 }
