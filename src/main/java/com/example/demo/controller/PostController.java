@@ -10,7 +10,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
@@ -25,6 +29,18 @@ public class PostController {
 		log.info("PostService의 원본 클래스: {}", AopProxyUtils.ultimateTargetClass(postService));
 
 		return postService.findPosts(pageable);
+	}
+
+	@PostMapping("/expire/non-bulk")
+	public int nonBulk(@RequestParam int daysAgo) {
+		LocalDateTime cutoff = LocalDateTime.now().minusDays(daysAgo);
+		return postService.expireNonBulk(cutoff);
+	}
+
+	@PostMapping("/expire/bulk")
+	public int bulk(@RequestParam int daysAgo) {
+		LocalDateTime cutoff = LocalDateTime.now().minusDays(daysAgo);
+		return postService.expireBulk(cutoff);
 	}
 }
 
